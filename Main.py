@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 #Configure a network with given number of input,hidden and output layer
 def init_network(n_inputs,n_hidden,n_output):
     network = list()
-    hidden_layer = [{'weights': [np.random.uniform(-0.05,0.05) for i in range(n_inputs+1)],"hidden":list()} for i in range(n_hidden)]
+    hidden_layer = [{'weights': [np.random.uniform(-0.05,0.05) for i in range(n_inputs+1)],"hidden":list(),"encode":0} for i in range(n_hidden)]
     output_layer = [{'weights': [np.random.uniform(-0.05,0.05) for i in range(n_hidden+1)]} for i in range(n_output)]
     network.append(hidden_layer)
     network.append(output_layer)
@@ -37,6 +37,8 @@ def forward_propagate(network, row, k=0):
             new_inputs.append(neuron['output'])
             if i == 0 and k == 1:
                 neuron['hidden'].append(neuron['output'])
+            if i == 0:
+                neuron['encode']= neuron['output']
         i +=1
         input = new_inputs
     return input
@@ -147,7 +149,7 @@ def plot_error(error_hist):
 
 #Driver program
 def main():
-    seed(random())
+    seed(1)
     network = init_network(8, 3, 8)
 
     train = [[1,0,0,0,0,0,0,0], [0,1,0,0,0,0,0,0], [0,0,1,0,0,0,0,0], [0,0,0,1,0,0,0,0], [0,0,0,0,1,0,0,0], [0,0,0,0,0,1,0,0], [0,0,0,0,0,0,1,0], [0,0,0,0,0,0,0,1]]
@@ -160,14 +162,21 @@ def main():
     for i in range(len(network[1])):
         error_hist.append(list())
 
-    train_network(network,train,0.3,5000,weight_hist,error_hist)
-    print predict(network,[0,0,0,0,0,0,0,1])
+    train_network(network, train, 0.3, 5000, weight_hist, error_hist)
 
+
+    for i in range(len(network)):
+        for j in range(len(network[i])):
+            print network[i][j]['weights']
+        print "\n\n"
 
     plot_hidden(network[0][0]['hidden'],network[0][1]['hidden'],network[0][2]['hidden'])
     plot_weights(weight_hist)
     plot_error(error_hist)
 
+    for k in range(len(train)):
+        predict(network, train[k])
+        print str(network[0][0]['encode'])+ ", "+ str(network[0][1]['encode']) + ", " + str(network[0][2]['encode'])
 
 
 #calling main function
