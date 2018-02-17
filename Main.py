@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 
 #Configure a network with given number of input,hidden and output layer
 def init_network(n_inputs,n_hidden,n_output):
+    np.random.seed(5)
     network = list()
     hidden_layer = [{'weights': [np.random.uniform(-0.05,0.05) for i in range(n_inputs+1)],"hidden":list(),"encode":0} for i in range(n_hidden)]
     output_layer = [{'weights': [np.random.uniform(-0.05,0.05) for i in range(n_hidden+1)]} for i in range(n_output)]
@@ -149,7 +150,6 @@ def plot_error(error_hist):
 
 #Driver program
 def main():
-    seed(1)
     network = init_network(8, 3, 8)
 
     train = [[1,0,0,0,0,0,0,0], [0,1,0,0,0,0,0,0], [0,0,1,0,0,0,0,0], [0,0,0,1,0,0,0,0], [0,0,0,0,1,0,0,0], [0,0,0,0,0,1,0,0], [0,0,0,0,0,0,1,0], [0,0,0,0,0,0,0,1]]
@@ -175,7 +175,7 @@ def main():
     plot_error(error_hist)
 
     for k in range(len(train)):
-        predict(network, train[k])
+        print predict(network, train[k])
         print str(network[0][0]['encode'])+ ", "+ str(network[0][1]['encode']) + ", " + str(network[0][2]['encode'])
 
 
